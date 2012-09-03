@@ -60,8 +60,7 @@ describe Graph do
     g.generate_graph.to_s.must_match /digraph/
   end
   it "should use the info data to enhance the entities" do
-    g.find_entity("peter").label.must_equal "Peter Pan"
+    g.generate_graph.find_node("peter").output
     g.find_entity("paul").picture.must_equal "logo_url"
-
   end
 end

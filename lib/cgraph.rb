@@ -33,10 +33,12 @@ module Cgraph
 
   class Graph
     attr_reader :entities, :connections
-    def initialize data, info
+    def initialize data, info, options={}
       Entity.clear_namelist
       @connections = []
       @entities = []
+      @root = options[:root] || ""
+      @no_penwidth = options[:penwidth] || false
       generate_entities data, info
       generate_connections data
     end
@@ -64,18 +66,41 @@ module Cgraph
         return e if e.name == name
       end
     end
-    def generate_graph
-      graph = GraphViz.new(:G, :type => :digraph)
-      graph = add_connections_to_graph graph
-      graph.output(:png => "test.png")
+    def add_entities graph
+      @entities.each do |e|
+        if e.picture
+          graph.add_nodes e.name,label: "",image: e.picture
+        else
+          graph.add_nodes e.name, label: e.label
+        end
+      end
       graph
+    end
+    def generate_graph
+      if @root
+        graph = GraphViz.new(:G, :type => :digraph, :root => @root)
+      else
+        graph = GraphViz.new(:G, :type => :digraph)
+      end
+      graph = add_connections_to_graph graph
+      graph = add_entities graph
+      graph
+    end
+    def to_png
+      graph.output(:png => "test.png")
     end
     def add_connections_to_graph graph
       @connections.each do |conn|
-        p conn
         tupel = conn.first
+        options = {}
 
-        options = {penwidth: conn[1][:count]}
+        if @no_penwidth
+          options = {}
+        else
+          #options = {penwidth: conn[1][:count]}
+          true
+        end
+
         graph.add_edges tupel[0],tupel[1],options
       end
       graph
