@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cgraph (0.0.1)
+    cgraph (0.0.3)
       ruby-graphviz
 
 GEM
