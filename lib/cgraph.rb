@@ -97,13 +97,20 @@ module Cgraph
         if @no_penwidth
           options = {}
         else
-          #options = {penwidth: conn[1][:count]}
-          true
+          options = {penwidth: calc_penwidth(conn[1][:count])}
         end
 
         graph.add_edges tupel[0],tupel[1],options
       end
       graph
+    end
+    def calc_penwidth(count)
+      case count
+      when 3..8 then 2
+      when 8..1000 then 3
+      else
+        1
+      end
     end
 
   end
