@@ -97,7 +97,7 @@ module Cgraph
         if @no_penwidth
           options = {}
         else
-          options = {penwidth: calc_penwidth(conn[1][:count])}
+          options = {style: calc_penwidth(conn[1][:count])}
         end
 
         graph.add_edges tupel[0],tupel[1],options
@@ -106,10 +106,10 @@ module Cgraph
     end
     def calc_penwidth(count)
       case count
-      when 3..8 then 2
-      when 8..1000 then 3
+      when 4..10 then 'dashed'
+      when 11..1000 then 'solid'
       else
-        1
+        'dotted'
       end
     end
 
